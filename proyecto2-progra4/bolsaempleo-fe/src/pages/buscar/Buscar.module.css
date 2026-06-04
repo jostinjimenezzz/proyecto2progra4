@@ -1,0 +1,75 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #dee0d09f;
+}
+
+.title {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.checkboxGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.checkboxLabel input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.botones {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    background: #2b7cff;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #1f63d6;
+}
+
+.resultados {
+    margin-top: 20px;
+}
+
+.puestoCard {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cardEmpresa {
+    margin: 0 0 8px 0;
+}

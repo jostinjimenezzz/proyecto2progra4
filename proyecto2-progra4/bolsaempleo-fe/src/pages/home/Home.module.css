@@ -1,0 +1,87 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #dee0d09f;
+}
+
+.title {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.puestosGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.puestoCard {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 220px;
+    vertical-align: top;
+}
+
+.cardEmpresa {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.cardDesc {
+    font-size: 14px;
+    color: #444;
+    margin: 0 0 8px 0;
+}
+
+.cardSalario {
+    font-size: 14px;
+    margin: 0 0 12px 0;
+    color: #222;
+}
+
+.btn {
+    background: #2b7cff;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #1f63d6;
+}
+
+.puestoTooltip {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #1f2933;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 5px;
+    z-index: 100;
+    min-width: 200px;
+    font-size: 13px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.puestoCard:hover .puestoTooltip {
+    display: block;
+}
+
+.tooltipList {
+    margin: 5px 0;
+    padding-left: 16px;
+}
