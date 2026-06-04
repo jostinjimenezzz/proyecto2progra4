@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/legacy-api")
 public class ApiPublicController {
 
     @Autowired private PuestoPublicoService puestoPublicoService;

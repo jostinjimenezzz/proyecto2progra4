@@ -2,23 +2,23 @@ import s from './Home.module.css';
 import { useEffect, useContext } from 'react';
 import { AppContext } from '@/AppProvider';
 import { Link } from 'react-router';
+import { api } from '@/services/api';
 
 function Home() {
     const { homeState, setHomeState } = useContext(AppContext);
-    const backend = '/api';
-
     useEffect(() => {
         if (homeState.puestos.length === 0)
             handleList();
     }, []);
 
     function handleList() {
-        const request = new Request(backend + '/puestos/recientes', { method: 'GET', headers: {} });
         (async () => {
-            const response = await fetch(request);
-            if (!response.ok) { alert('Error: ' + response.status); return; }
-            const puestos = await response.json();
-            setHomeState({ ...homeState, puestos: puestos });
+            try {
+                const puestos = await api.get('/puestos/recientes');
+                setHomeState({ ...homeState, puestos: puestos });
+            } catch (e) {
+                alert(e.message);
+            }
         })();
     }
 

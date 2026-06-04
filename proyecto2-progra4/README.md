@@ -40,7 +40,7 @@ Por defecto usa `root / root` en `localhost:3306/bolsaempleo`.
 
 ```bash
 cd bolsaempleo-be
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
 Queda corriendo en: http://localhost:8080
@@ -58,6 +58,31 @@ npm run dev
 ```
 
 Queda corriendo en: http://localhost:5173
+
+---
+
+## Autenticación JWT
+
+- Endpoint login: `POST /api/auth/login`
+- Registro empresa: `POST /api/auth/registro/empresa`
+- Registro oferente: `POST /api/auth/registro/oferente`
+- Perfil autenticado: `GET /api/usuarios/me`
+
+El frontend guarda el token JWT en `localStorage` y lo envía en el header de autenticación de cada request.
+
+---
+
+## Producción (servidor único)
+
+El backend sirve el frontend compilado desde `src/main/resources/static/`.
+
+Scripts:
+
+```bash
+./build.sh   # build frontend + empaquetar backend
+./start.sh   # levantar backend en 8080 (sirve SPA y API)
+./dev.sh     # levantar backend y frontend en modo desarrollo
+```
 
 ---
 

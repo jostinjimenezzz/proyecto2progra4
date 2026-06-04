@@ -1,87 +1,76 @@
 package com.proyecto1.proyecto1progra4.Security;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final List<String> allowedOrigins;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                          @Value("${app.cors.allowed-origins:http://localhost:5173}") List<String> allowedOrigins) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.allowedOrigins = allowedOrigins;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .cors(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/", "/home", "/login", "/login**", "/doLogin",
-                                "/registro/**", "/puestos/**",
-                                "/api/**",
-                                "/error", "/notAuthorized",
-                                "/css/**", "/Styles/**", "/images/**", "/cvs/**"
+                                "/", "/index.html", "/assets/**", "/favicon.ico",
+                                "/api/auth/**", "/api/puestos/**", "/api/caracteristicas/**",
+                                "/api/registro/**", "/error"
                         ).permitAll()
-                        .requestMatchers("/Administrador/**").hasAuthority("ADMIN")
-                        .requestMatchers("/Empresa/**").hasAuthority("EMPRESA")
-                        .requestMatchers("/Oferente/**").hasAuthority("OFERENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/usuarios/me").authenticated()
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/empresa/**").hasAuthority("EMPRESA")
+                        .requestMatchers("/api/oferente/**").hasAuthority("OFERENTE")
                         .anyRequest().authenticated()
                 )
-
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/doLogin")
-                        .failureUrl("/login?fallo=1")
-                        .successHandler(this::roleAwareSuccessHandler)
-                        .permitAll()
-                )
-
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .permitAll()
-                )
-
-                .exceptionHandling(ex -> ex
-                        .accessDeniedPage("/notAuthorized")
-                )
-
-                .csrf(csrf -> csrf.disable());
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    private void roleAwareSuccessHandler(jakarta.servlet.http.HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Authentication authentication) throws java.io.IOException {
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> "ADMIN".equals(a.getAuthority()));
-        boolean isEmpresa = authentication.getAuthorities().stream()
-                .anyMatch(a -> "EMPRESA".equals(a.getAuthority()));
-        boolean isOferente = authentication.getAuthorities().stream()
-                .anyMatch(a -> "OFERENTE".equals(a.getAuthority()));
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(false);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
-        if (isAdmin) {
-            response.sendRedirect("/Administrador/dashboard");
-            return;
-        }
-        if (isEmpresa) {
-            response.sendRedirect("/Empresa/dashboard");
-            return;
-        }
-        if (isOferente) {
-            response.sendRedirect("/Oferente/dashboard");
-            return;
-        }
-        response.sendRedirect("/home");
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean

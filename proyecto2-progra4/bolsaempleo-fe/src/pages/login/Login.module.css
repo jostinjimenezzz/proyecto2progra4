@@ -12,6 +12,14 @@
     font-weight: bold;
 }
 
+.error {
+    background: #ffe1e1;
+    color: #8b0000;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
 .form {
     display: flex;
     flex-direction: column;
