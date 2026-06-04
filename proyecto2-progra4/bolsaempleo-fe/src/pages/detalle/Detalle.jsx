@@ -1,25 +1,25 @@
 import s from './Detalle.module.css';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router';
+import { api } from '@/services/api';
 
 function Detalle() {
     const { id } = useParams();
     const [puesto, setPuesto] = useState(null);
     const [requisitos, setRequisitos] = useState([]);
-    const backend = '/api';
-
     useEffect(() => {
         handleCargarDetalle();
     }, [id]);
 
     function handleCargarDetalle() {
-        const request = new Request(backend + '/puestos/detalle/' + id, { method: 'GET', headers: {} });
         (async () => {
-            const response = await fetch(request);
-            if (!response.ok) { alert('Error: ' + response.status); return; }
-            const data = await response.json();
-            setPuesto(data.puesto);
-            setRequisitos(data.requisitos);
+            try {
+                const data = await api.get('/puestos/detalle/' + id);
+                setPuesto(data.puesto);
+                setRequisitos(data.requisitos);
+            } catch (e) {
+                alert(e.message);
+            }
         })();
     }
 

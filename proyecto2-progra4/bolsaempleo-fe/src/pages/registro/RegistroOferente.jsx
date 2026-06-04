@@ -2,12 +2,11 @@ import s from './Registro.module.css';
 import { useContext } from 'react';
 import { AppContext } from '@/AppProvider';
 import { Link, useNavigate } from 'react-router';
+import { api } from '@/services/api';
 
 function RegistroOferente() {
     const { registroState, setRegistroState } = useContext(AppContext);
     const navigate = useNavigate();
-    const backend = '/api';
-
     function handleFieldChange(event) {
         const { name, value } = event.target;
         setRegistroState({
@@ -19,19 +18,13 @@ function RegistroOferente() {
 
     function handleSave(event) {
         event.preventDefault();
-        const request = new Request(backend + '/registro/oferente', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(registroState.oferente),
-        });
         (async () => {
-            const response = await fetch(request);
-            if (!response.ok) {
-                const msg = await response.text();
-                setRegistroState({ ...registroState, error: msg || 'Error al registrar.' });
-                return;
+            try {
+                await api.post('/auth/registro/oferente', registroState.oferente);
+                navigate('/registro/exito?tipo=oferente');
+            } catch (e) {
+                setRegistroState({ ...registroState, error: e.message || 'Error al registrar.' });
             }
-            navigate('/registro/exito?tipo=oferente');
         })();
     }
 

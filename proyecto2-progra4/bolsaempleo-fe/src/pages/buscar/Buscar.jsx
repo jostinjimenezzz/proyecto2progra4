@@ -2,23 +2,23 @@ import s from './Buscar.module.css';
 import { useEffect, useContext } from 'react';
 import { AppContext } from '@/AppProvider';
 import { Link } from 'react-router';
+import { api } from '@/services/api';
 
 function Buscar() {
     const { buscarState, setBuscarState } = useContext(AppContext);
-    const backend = '/api';
-
     useEffect(() => {
         if (buscarState.caracteristicas.length === 0)
             handleCargarCaracteristicas();
     }, []);
 
     function handleCargarCaracteristicas() {
-        const request = new Request(backend + '/caracteristicas', { method: 'GET', headers: {} });
         (async () => {
-            const response = await fetch(request);
-            if (!response.ok) { alert('Error: ' + response.status); return; }
-            const caracteristicas = await response.json();
-            setBuscarState({ ...buscarState, caracteristicas: caracteristicas });
+            try {
+                const caracteristicas = await api.get('/caracteristicas');
+                setBuscarState({ ...buscarState, caracteristicas: caracteristicas });
+            } catch (e) {
+                alert(e.message);
+            }
         })();
     }
 
@@ -38,12 +38,13 @@ function Buscar() {
         event.preventDefault();
         const ids = buscarState.seleccionadas;
         const query = ids.length > 0 ? '?caracteristicaIds=' + ids.join('&caracteristicaIds=') : '';
-        const request = new Request(backend + '/puestos/buscar' + query, { method: 'GET', headers: {} });
         (async () => {
-            const response = await fetch(request);
-            if (!response.ok) { alert('Error: ' + response.status); return; }
-            const resultados = await response.json();
-            setBuscarState({ ...buscarState, resultados: resultados, buscado: true });
+            try {
+                const resultados = await api.get('/puestos/buscar' + query);
+                setBuscarState({ ...buscarState, resultados: resultados, buscado: true });
+            } catch (e) {
+                alert(e.message);
+            }
         })();
     }
 
