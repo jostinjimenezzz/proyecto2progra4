@@ -1,3 +1,9 @@
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Controllers/AdminController.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Controllers/AuthController.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Controllers/CaracteristicasController.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Controllers/PuestosController.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Controllers/SpaForwardController.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Controllers/UsuariosController.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/Admin.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/Caracteristica.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/Empresa.java
@@ -8,6 +14,8 @@
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/Puestocaracteristica.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/PuestocaracteristicaId.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/Usuario.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/dto/AuthDtos.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Data/dto/RegistroDtos.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Logic/ApiPublicController.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Logic/ControllerAdmin.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Logic/ControllerDashboards.java
@@ -25,10 +33,13 @@
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Repositories/PuestoRepository.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Repositories/PuestocaracteristicaRepository.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Repositories/UsuariosRepository.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Security/JwtAuthenticationFilter.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Security/JwtProvider.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Security/SecurityConfig.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Security/UserDetailsImp.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Security/UserDetailsServiceImpl.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Services/AprobacionService.java
+/tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Services/AuthService.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Services/CaracteristicaService.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Services/PuestoEmpresaService.java
 /tmp/workspace/NashiAU/Proyecto2-Progra4/proyecto2-progra4/bolsaempleo-be/src/main/java/com/proyecto1/proyecto1progra4/Services/PuestoPublicoService.java

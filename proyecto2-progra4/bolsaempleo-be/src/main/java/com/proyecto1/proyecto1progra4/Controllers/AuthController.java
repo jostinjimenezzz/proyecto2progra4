@@ -4,14 +4,13 @@ import com.proyecto1.proyecto1progra4.Data.Empresa;
 import com.proyecto1.proyecto1progra4.Data.Oferente;
 import com.proyecto1.proyecto1progra4.Data.Usuario;
 import com.proyecto1.proyecto1progra4.Data.dto.AuthDtos;
+import com.proyecto1.proyecto1progra4.Data.dto.RegistroDtos;
 import com.proyecto1.proyecto1progra4.Services.AuthService;
 import com.proyecto1.proyecto1progra4.Services.RegistroService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,36 +36,36 @@ public class AuthController {
     }
 
     @PostMapping("/registro/empresa")
-    public ResponseEntity<?> registrarEmpresa(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> registrarEmpresa(@Valid @RequestBody RegistroDtos.RegistroEmpresaRequest body) {
         Usuario u = new Usuario();
-        u.setUsername(body.get("correo"));
-        u.setClave(passwordEncoder.encode(body.get("clave")));
+        u.setUsername(body.correo());
+        u.setClave(passwordEncoder.encode(body.clave()));
 
         Empresa e = new Empresa();
-        e.setNombre(body.get("nombre"));
-        e.setLocalizacion(body.get("localizacion"));
-        e.setTelefono(body.get("telefono"));
-        e.setDescripcion(body.get("descripcion"));
+        e.setNombre(body.nombre());
+        e.setLocalizacion(body.localizacion());
+        e.setTelefono(body.telefono());
+        e.setDescripcion(body.descripcion());
 
         registroService.registrarEmpresa(u, e);
-        return ResponseEntity.ok(Map.of("message", "Registro de empresa enviado"));
+        return ResponseEntity.ok(java.util.Map.of("message", "Registro de empresa enviado"));
     }
 
     @PostMapping("/registro/oferente")
-    public ResponseEntity<?> registrarOferente(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> registrarOferente(@Valid @RequestBody RegistroDtos.RegistroOferenteRequest body) {
         Usuario u = new Usuario();
-        u.setUsername(body.get("correo"));
-        u.setClave(passwordEncoder.encode(body.get("clave")));
+        u.setUsername(body.correo());
+        u.setClave(passwordEncoder.encode(body.clave()));
 
         Oferente o = new Oferente();
-        o.setIdentificacion(body.get("identificacion"));
-        o.setNombre(body.get("nombre"));
-        o.setPrimerApellido(body.get("primerApellido"));
-        o.setNacionalidad(body.get("nacionalidad"));
-        o.setTelefono(body.get("telefono"));
-        o.setLugarResidencia(body.get("lugarResidencia"));
+        o.setIdentificacion(body.identificacion());
+        o.setNombre(body.nombre());
+        o.setPrimerApellido(body.primerApellido());
+        o.setNacionalidad(body.nacionalidad());
+        o.setTelefono(body.telefono());
+        o.setLugarResidencia(body.lugarResidencia());
 
         registroService.registrarOferente(u, o);
-        return ResponseEntity.ok(Map.of("message", "Registro de oferente enviado"));
+        return ResponseEntity.ok(java.util.Map.of("message", "Registro de oferente enviado"));
     }
 }

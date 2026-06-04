@@ -26,12 +26,16 @@ public class JwtProvider {
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMs);
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(a -> a.getAuthority())
+                .orElse("");
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .claim("role", userDetails.getAuthorities().stream().findFirst().map(Object::toString).orElse(""))
+                .claim("role", role)
                 .signWith(key)
                 .compact();
     }

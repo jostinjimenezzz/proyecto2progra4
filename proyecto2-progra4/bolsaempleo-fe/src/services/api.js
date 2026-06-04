@@ -20,7 +20,7 @@ async function request(path, options = {}) {
 
   if (response.status === 401) {
     clearToken();
-    throw new Error('Sesión expirada. Iniciá sesión de nuevo.');
+    throw new Error('Sesión expirada. Inicia sesión de nuevo.');
   }
 
   if (!response.ok) {
