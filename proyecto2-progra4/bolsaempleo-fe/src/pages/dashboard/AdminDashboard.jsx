@@ -86,10 +86,30 @@ export default function AdminDashboard() {
         }
     }
 
+    async function rechazarEmpresa(id) {
+        try {
+            await api.post(`/admin/empresas/${id}/rechazar`, {});
+            setMensaje('Empresa rechazada.');
+            cargarEmpresas();
+        } catch (e) {
+            setMensaje('Error: ' + e.message);
+        }
+    }
+
     async function aprobarOferente(id) {
         try {
             await api.post(`/admin/oferentes/${id}/aprobar`, {});
             setMensaje('Oferente aprobado correctamente.');
+            cargarOferentes();
+        } catch (e) {
+            setMensaje('Error: ' + e.message);
+        }
+    }
+
+    async function rechazarOferente(id) {
+        try {
+            await api.post(`/admin/oferentes/${id}/rechazar`, {});
+            setMensaje('Oferente rechazado.');
             cargarOferentes();
         } catch (e) {
             setMensaje('Error: ' + e.message);
@@ -150,6 +170,10 @@ export default function AdminDashboard() {
                         onClick={() => setTab('caracteristicas')}>
                     Características
                 </button>
+                <button className={tab === 'reportes' ? s.tabActivo : s.tab}
+                        onClick={() => setTab('reportes')}>
+                    Reportes
+                </button>
             </div>
 
             {tab === 'empresas' && (
@@ -166,7 +190,7 @@ export default function AdminDashboard() {
                                 <th>Localización</th>
                                 <th>Teléfono</th>
                                 <th>Descripción</th>
-                                <th>Acción</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -177,10 +201,14 @@ export default function AdminDashboard() {
                                     <td>{e.localizacion}</td>
                                     <td>{e.telefono}</td>
                                     <td>{e.descripcion}</td>
-                                    <td>
+                                    <td style={{ display: 'flex', gap: '6px' }}>
                                         <button className={s.btnAprobar}
                                                 onClick={() => aprobarEmpresa(e.id)}>
                                             Aprobar
+                                        </button>
+                                        <button className={s.btnDesactivar}
+                                                onClick={() => rechazarEmpresa(e.id)}>
+                                            Rechazar
                                         </button>
                                     </td>
                                 </tr>
@@ -206,7 +234,7 @@ export default function AdminDashboard() {
                                 <th>Nacionalidad</th>
                                 <th>Teléfono</th>
                                 <th>Residencia</th>
-                                <th>Acción</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -218,10 +246,14 @@ export default function AdminDashboard() {
                                     <td>{o.nacionalidad}</td>
                                     <td>{o.telefono}</td>
                                     <td>{o.lugarResidencia}</td>
-                                    <td>
+                                    <td style={{ display: 'flex', gap: '6px' }}>
                                         <button className={s.btnAprobar}
                                                 onClick={() => aprobarOferente(o.id)}>
                                             Aprobar
+                                        </button>
+                                        <button className={s.btnDesactivar}
+                                                onClick={() => rechazarOferente(o.id)}>
+                                            Rechazar
                                         </button>
                                     </td>
                                 </tr>
@@ -231,11 +263,6 @@ export default function AdminDashboard() {
                     )}
                 </div>
             )}
-
-            <button className={tab === 'reportes' ? s.tabActivo : s.tab}
-                    onClick={() => setTab('reportes')}>
-                Reportes
-            </button>
 
             {tab === 'caracteristicas' && (
                 <div className={s.seccion}>
@@ -266,10 +293,10 @@ export default function AdminDashboard() {
                     <ArbolCaracteristicas caracteristicas={caracteristicas} />
                 </div>
             )}
+
             {tab === 'reportes' && (
                 <div className={s.seccion}>
                     <h3>Reportes</h3>
-
                     <div className={s.reportesGrid}>
                         <div className={s.reporteCard}>
                             <h4>Puestos por mes</h4>

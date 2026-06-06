@@ -1,5 +1,6 @@
 package com.proyecto1.proyecto1progra4.Controllers;
 
+import com.proyecto1.proyecto1progra4.Data.Caracteristica;
 import com.proyecto1.proyecto1progra4.Data.Puesto;
 import com.proyecto1.proyecto1progra4.Data.Puestocaracteristica;
 import com.proyecto1.proyecto1progra4.Services.PuestoPublicoService;
@@ -21,7 +22,7 @@ public class PuestosController {
         this.puestoPublicoService = puestoPublicoService;
     }
 
-    record CaracteristicaDTO(Long id, String nombre) {}
+    record CaracteristicaDTO(Long id, String nombre, Long idPadre) {}
     record RequisitoDTO(CaracteristicaDTO caracteristica, Integer nivelDeseado) {}
     record EmpresaDTO(Long id, String nombre) {}
     record PuestoDTO(Long id, EmpresaDTO empresa, String descripcionGeneral,
@@ -30,9 +31,11 @@ public class PuestosController {
     record DetalleDTO(PuestoDTO puesto, List<RequisitoDTO> requisitos) {}
 
     private RequisitoDTO toRequisitoDTO(Puestocaracteristica r) {
+        Caracteristica car = r.getCaracteristica();
         CaracteristicaDTO c = new CaracteristicaDTO(
-                r.getCaracteristica().getId(),
-                r.getCaracteristica().getNombre()
+                car.getId(),
+                car.getNombre(),
+                car.getIdPadre() != null ? car.getIdPadre().getId() : null
         );
         return new RequisitoDTO(c, r.getNivelDeseado());
     }

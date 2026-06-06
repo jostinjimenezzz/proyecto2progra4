@@ -70,6 +70,39 @@ public class EmpresaController {
         return ResponseEntity.ok(lista);
     }
 
+    record HabilidadDTO(String nombre, Integer nivel) {}
+    record CandidatoDetalleDTO(Long id, String nombre, String primerApellido,
+                               String identificacion, String nacionalidad,
+                               String telefono, String lugarResidencia,
+                               boolean tieneCv, List<HabilidadDTO> habilidades) {}
+
+    @GetMapping("/candidatos/{id}/detalle")
+    @Transactional(readOnly = true)
+    public ResponseEntity<CandidatoDetalleDTO> detalleCandidato(@PathVariable Long id) {
+        Oferente oferente = oferenteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Oferente no encontrado"));
+
+        List<HabilidadDTO> habilidades = habilidadRepository.findByOferente(oferente)
+                .stream()
+                .map(h -> new HabilidadDTO(
+                        h.getCaracteristica().getNombre(),
+                        h.getNivel()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(new CandidatoDetalleDTO(
+                oferente.getId(),
+                oferente.getNombre(),
+                oferente.getPrimerApellido(),
+                oferente.getIdentificacion(),
+                oferente.getNacionalidad(),
+                oferente.getTelefono(),
+                oferente.getLugarResidencia(),
+                oferente.getCvPath() != null && !oferente.getCvPath().isBlank(),
+                habilidades
+        ));
+    }
+
     @GetMapping("/caracteristicas")
     @Transactional(readOnly = true)
     public ResponseEntity<List<CaracteristicaDTO>> caracteristicas() {

@@ -3,6 +3,96 @@ import { useAuth } from '@/hooks/useAuth';
 import { api } from '@/services/api';
 import s from './Dashboard.module.css';
 
+// Modal de detalle del candidato
+function ModalCandidato({ candidatoId, onCerrar }) {
+    const [detalle, setDetalle] = useState(null);
+    const [cargando, setCargando] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const data = await api.get(`/empresa/candidatos/${candidatoId}/detalle`);
+                setDetalle(data);
+            } catch (e) {
+                alert('Error cargando detalle: ' + e.message);
+                onCerrar();
+            } finally {
+                setCargando(false);
+            }
+        })();
+    }, [candidatoId]);
+
+    return (
+        <div className={s.modalOverlay} onClick={onCerrar}>
+            <div className={s.modal} onClick={e => e.stopPropagation()}>
+                <div className={s.modalHeader}>
+                    <h3 className={s.modalTitulo}>Detalle del candidato</h3>
+                    <button className={s.modalCerrar} onClick={onCerrar}>✕</button>
+                </div>
+
+                {cargando ? (
+                    <p>Cargando...</p>
+                ) : detalle ? (
+                    <div>
+                        <div className={s.modalSeccion}>
+                            <h4>Datos personales</h4>
+                            <table className={s.tablaDetalle}>
+                                <tbody>
+                                <tr><td><strong>Nombre</strong></td><td>{detalle.nombre} {detalle.primerApellido}</td></tr>
+                                <tr><td><strong>Identificación</strong></td><td>{detalle.identificacion}</td></tr>
+                                <tr><td><strong>Nacionalidad</strong></td><td>{detalle.nacionalidad}</td></tr>
+                                <tr><td><strong>Teléfono</strong></td><td>{detalle.telefono}</td></tr>
+                                <tr><td><strong>Residencia</strong></td><td>{detalle.lugarResidencia}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className={s.modalSeccion}>
+                            <h4>Habilidades</h4>
+                            {detalle.habilidades.length === 0 ? (
+                                <p className={s.vacio}>Sin habilidades registradas.</p>
+                            ) : (
+                                <table className={s.tabla}>
+                                    <thead>
+                                    <tr>
+                                        <th>Característica</th>
+                                        <th>Nivel</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {detalle.habilidades.map((h, i) => (
+                                        <tr key={i}>
+                                            <td>{h.nombre}</td>
+                                            <td>{h.nivel}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+
+                        <div className={s.modalSeccion}>
+                            <h4>Currículum</h4>
+                            {detalle.tieneCv ? (
+                                <a
+                                    href={`/api/empresa/candidatos/${detalle.id}/cv`}
+                                    target="_blank"
+                                    className={s.btnAprobar}
+                                    style={{ textDecoration: 'none', padding: '8px 14px' }}
+                                >
+                                    Ver CV (PDF)
+                                </a>
+                            ) : (
+                                <p className={s.vacio}>El candidato no ha subido su CV.</p>
+                            )}
+                        </div>
+                    </div>
+                ) : null}
+            </div>
+        </div>
+    );
+}
+
 export default function EmpresaDashboard() {
     const { user, logout } = useAuth();
     const [tab, setTab] = useState('puestos');
@@ -12,6 +102,7 @@ export default function EmpresaDashboard() {
     const [mostrarForm, setMostrarForm] = useState(false);
     const [candidatos, setCandidatos] = useState([]);
     const [puestoSeleccionado, setPuestoSeleccionado] = useState(null);
+    const [candidatoDetalleId, setCandidatoDetalleId] = useState(null);
 
     // Form nuevo puesto
     const [descripcion, setDescripcion] = useState('');
@@ -193,8 +284,7 @@ export default function EmpresaDashboard() {
                                             onClick={() => eliminarRequisito(i)}>✕</button>
                                 </div>
                             ))}
-                            <button type="button" className={s.btnSecundario}
-                                    onClick={agregarRequisito}>
+                            <button type="button" className={s.btnSecundario} onClick={agregarRequisito}>
                                 + Agregar característica
                             </button>
 
@@ -224,12 +314,12 @@ export default function EmpresaDashboard() {
                                     <td>₡ {p.salarioOfrecido}</td>
                                     <td>{p.tipoPublicacion}</td>
                                     <td>
-                                            <span style={{
-                                                color: p.activo ? '#27ae60' : '#e74c3c',
-                                                fontWeight: 'bold'
-                                            }}>
-                                                {p.activo ? 'Activo' : 'Inactivo'}
-                                            </span>
+                                        <span style={{
+                                            color: p.activo ? '#27ae60' : '#e74c3c',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {p.activo ? 'Activo' : 'Inactivo'}
+                                        </span>
                                     </td>
                                     <td>
                                         {p.requisitos?.map((r, i) => (
@@ -273,7 +363,7 @@ export default function EmpresaDashboard() {
                                 <th>Teléfono</th>
                                 <th>Residencia</th>
                                 <th>Coincidencia</th>
-                                <th>CV</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -285,25 +375,21 @@ export default function EmpresaDashboard() {
                                     <td>{c.telefono}</td>
                                     <td>{c.lugarResidencia}</td>
                                     <td>
-                                            <span style={{
-                                                fontWeight: 'bold',
-                                                color: parseInt(c.porcentaje) >= 75 ? '#27ae60' :
-                                                    parseInt(c.porcentaje) >= 50 ? '#f39c12' : '#e74c3c'
-                                            }}>
-                                                {c.porcentaje} ({c.cumplidos}/{c.total})
-                                            </span>
+                                        <span style={{
+                                            fontWeight: 'bold',
+                                            color: parseInt(c.porcentaje) >= 75 ? '#27ae60' :
+                                                parseInt(c.porcentaje) >= 50 ? '#f39c12' : '#e74c3c'
+                                        }}>
+                                            {c.porcentaje} ({c.cumplidos}/{c.total})
+                                        </span>
                                     </td>
-                                    <td>
-                                        {c.tieneCv ? (
-                                            <a href={`/api/empresa/candidatos/${c.id}/cv`}
-                                               target="_blank"
-                                               className={s.btnAprobar}
-                                               style={{ textDecoration: 'none', padding: '6px 10px' }}>
-                                                Ver CV
-                                            </a>
-                                        ) : (
-                                            <span style={{ color: '#aaa', fontSize: '12px' }}>Sin CV</span>
-                                        )}
+                                    <td style={{ display: 'flex', gap: '6px', flexDirection: 'column' }}>
+                                        <button
+                                            className={s.btnAprobar}
+                                            onClick={() => setCandidatoDetalleId(c.id)}
+                                        >
+                                            Ver detalle
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -311,6 +397,14 @@ export default function EmpresaDashboard() {
                         </table>
                     )}
                 </div>
+            )}
+
+            {/* Modal detalle candidato */}
+            {candidatoDetalleId && (
+                <ModalCandidato
+                    candidatoId={candidatoDetalleId}
+                    onCerrar={() => setCandidatoDetalleId(null)}
+                />
             )}
         </div>
     );

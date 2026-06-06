@@ -71,6 +71,18 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("message", "Empresa aprobada"));
     }
 
+    @PostMapping("/empresas/{id}/rechazar")
+    public ResponseEntity<?> rechazarEmpresa(@PathVariable Long id) {
+        aprobacionService.rechazarEmpresa(id);
+        return ResponseEntity.ok(Map.of("message", "Empresa rechazada"));
+    }
+
+    @PostMapping("/oferentes/{id}/rechazar")
+    public ResponseEntity<?> rechazarOferente(@PathVariable Long id) {
+        aprobacionService.rechazarOferente(id);
+        return ResponseEntity.ok(Map.of("message", "Oferente rechazado"));
+    }
+
     @PostMapping("/oferentes/{id}/aprobar")
     public ResponseEntity<?> aprobarOferente(@PathVariable Long id) {
         aprobacionService.aprobarOferente(id);

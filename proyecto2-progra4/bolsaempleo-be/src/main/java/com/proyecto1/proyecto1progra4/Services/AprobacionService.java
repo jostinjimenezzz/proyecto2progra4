@@ -36,6 +36,22 @@ public class AprobacionService {
     }
 
     @Transactional
+    public void rechazarEmpresa(Long empresaId) {
+        Empresa e = empresas.findById(empresaId)
+                .orElseThrow(() -> new IllegalArgumentException("Empresa no existe: " + empresaId));
+        e.setEstadoAprobacion("RECHAZADO");
+        empresas.save(e);
+    }
+
+    @Transactional
+    public void rechazarOferente(Long oferenteId) {
+        Oferente o = oferentes.findById(oferenteId)
+                .orElseThrow(() -> new IllegalArgumentException("Oferente no existe: " + oferenteId));
+        o.setEstadoAprobacion("RECHAZADO");
+        oferentes.save(o);
+    }
+
+    @Transactional
     public void aprobarOferente(Long oferenteId) {
         Oferente o = oferentes.findById(oferenteId)
                 .orElseThrow(() -> new IllegalArgumentException("Oferente no existe: " + oferenteId));

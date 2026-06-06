@@ -12,11 +12,9 @@ import com.proyecto1.proyecto1progra4.Repositories.OferenteRepository;
 import com.proyecto1.proyecto1progra4.Repositories.PuestoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -77,6 +75,7 @@ public class ReporteAdminService {
         }
     }
 
+    @Transactional(readOnly = true)
     public byte[] pdfEmpresasPendientesYAprobadas() {
         List<Empresa> pendientes = empresaRepository.findByEstadoAprobacion("PENDIENTE");
         List<Empresa> aprobadas = empresaRepository.findByEstadoAprobacion("APROBADO");
@@ -103,6 +102,7 @@ public class ReporteAdminService {
         }
     }
 
+    @Transactional(readOnly = true)
     public byte[] pdfOferentesPendientesYAprobados() {
         List<Oferente> pendientes = oferenteRepository.findByEstadoAprobacion("PENDIENTE");
         List<Oferente> aprobados = oferenteRepository.findByEstadoAprobacion("APROBADO");
