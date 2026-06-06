@@ -4,8 +4,9 @@ import com.proyecto1.proyecto1progra4.Data.Puesto;
 import com.proyecto1.proyecto1progra4.Data.Puestocaracteristica;
 import com.proyecto1.proyecto1progra4.Services.PuestoPublicoService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.core.Authentication;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -44,8 +45,16 @@ public class PuestosController {
     }
 
     @GetMapping("/recientes")
-    public ResponseEntity<List<PuestoDTO>> recientes() {
-        List<Puesto> lista = puestoPublicoService.top5PuestosPublicosRecientes();
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<PuestoDTO>> recientes(Authentication authentication) {
+        boolean esOferente = authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("OFERENTE"));
+
+        List<Puesto> lista = esOferente
+                ? puestoPublicoService.top5PuestosRecientes()
+                : puestoPublicoService.top5PuestosPublicosRecientes();
+
         List<PuestoDTO> result = lista.stream()
                 .map(p -> toPuestoDTO(p, puestoPublicoService.requisitosDelPuesto(p.getId())))
                 .toList();
@@ -53,8 +62,16 @@ public class PuestosController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<PuestoDTO>> buscar(@RequestParam(required = false) List<Long> caracteristicaIds) {
-        List<Puesto> resultados = puestoPublicoService.buscarPuestosPublicos(caracteristicaIds);
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<PuestoDTO>> buscar(
+            @RequestParam(required = false) List<Long> caracteristicaIds,
+            Authentication authentication) {
+
+        boolean esOferente = authentication != null &&
+                authentication.getAuthorities().stream()
+                        .anyMatch(a -> a.getAuthority().equals("OFERENTE"));
+
+        List<Puesto> resultados = puestoPublicoService.buscarPuestos(caracteristicaIds, esOferente);
         List<PuestoDTO> result = resultados.stream()
                 .map(p -> toPuestoDTO(p, Collections.emptyList()))
                 .toList();
@@ -62,6 +79,7 @@ public class PuestosController {
     }
 
     @GetMapping("/detalle/{id}")
+    @Transactional(readOnly = true)
     public ResponseEntity<DetalleDTO> detalle(@PathVariable Long id) {
         Puesto puesto = puestoPublicoService.buscarPuestoPorId(id);
         List<Puestocaracteristica> requisitos = puestoPublicoService.requisitosDelPuesto(id);

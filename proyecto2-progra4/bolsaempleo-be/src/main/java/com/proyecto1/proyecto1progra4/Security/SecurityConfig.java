@@ -43,7 +43,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/index.html", "/assets/**", "/favicon.ico",
                                 "/api/auth/**", "/api/puestos/**", "/api/caracteristicas/**",
-                                "/api/registro/**", "/error"
+                                "/api/registro/**", "/error",
+                                "/Administrador/reportes/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/usuarios/me").authenticated()
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")

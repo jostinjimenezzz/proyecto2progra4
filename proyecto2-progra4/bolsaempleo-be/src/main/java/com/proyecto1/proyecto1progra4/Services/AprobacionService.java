@@ -16,10 +16,12 @@ public class AprobacionService {
     @Autowired private EmpresaRepository empresas;
     @Autowired private OferenteRepository oferentes;
 
+    @Transactional(readOnly = true)
     public List<Empresa> empresasPendientes() {
         return empresas.findByEstadoAprobacion("PENDIENTE");
     }
 
+    @Transactional(readOnly = true)
     public List<Oferente> oferentesPendientes() {
         return oferentes.findByEstadoAprobacion("PENDIENTE");
     }
